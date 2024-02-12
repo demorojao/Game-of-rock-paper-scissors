@@ -16,74 +16,90 @@
             .align{
                 display: flex;
             }
+
+            .player-options{
+                border: solid 1px black !important;
+                justify-content: flex-start; /* Alinha à esquerda */
+                display: flex;
+            }
+            .enemy-options {
+                display: flex;
+                justify-content: flex-end; /* Alinha à direita */
+                border: solid 1px black !important;
+            }
         </style>
         <h1 style="text-align: center;">Pedra, papel ou tesoura!</h1>
         <hr>
         <div class="align">
             <div class="player-options">
+                <div><img opt="tesoura" src="scisor.png" /></div>
+                <div><img opt="papel" src="paper.png" /></div>
+                <div><img opt="pedra" src="rock.png" /></div>
+            </div>
+            <div class="enemy-options">
                 <div><img opt="pedra" src="rock.png" /></div>
                 <div><img opt="papel" src="paper.png" /></div>
                 <div><img opt="tesoura" src="scisor.png" /></div>
             </div>
-            <div class="enemy-options">
-                <div><img opt ="pedra" src="rock.png" /></div>
-                <div><img opt ="papel" src="paper.png" /></div>
-                <div><img opt ="tesoura" src="scisor.png" /></div>
-            </div>
-    </div>
-    <script>
-        var elementos = document.querySelectorAll('.player-options div > img');
-        var playerOpt = "";
-        var inimigoOpt = "";
+        </div>
+        <p>Pontuação do jogador: <span id="pontuacaoJogador">0</span></p> <!-- Elemento para exibir a pontuação do jogador -->
+        <p>Pontuação do inimigo: <span id="pontuacaoInimigo">0</span></p> <!-- Elemento para exibir a pontuação do inimigo -->
+        <script>
+            var elementos = document.querySelectorAll('.player-options div > img');
+            var playerOpt = "";
+            var inimigoOpt = "";
+            var pontuacaoJogador = 0; // Inicialize a pontuação do jogador
+            var pontuacaoInimigo = 0; // Inicialize a pontuação do inimigo
     
-        function inimigoJogar(){
-            let rand = Math.floor(Math.random()*3);
-            
-            const enemyOptions = document.querySelectorAll(".enemy-options div > img");
+            function inimigoJogar(){
+                let rand = Math.floor(Math.random()*3);
+                const enemyOptions = document.querySelectorAll(".enemy-options div > img");
     
-            for(var i = 0; i< enemyOptions.length; i++) {
-                enemyOptions[i].style.opacity = 0.3;
-                if(i == rand){
-                    enemyOptions[i].style.opacity = 1;
-                    inimigoOpt = enemyOptions[i].getAttribute('opt');
+                for(var i = 0; i < enemyOptions.length; i++) {
+                    enemyOptions[i].style.opacity = 0.3;
+                    if(i === rand){
+                        enemyOptions[i].style.opacity = 1;
+                        inimigoOpt = enemyOptions[i].getAttribute('opt');
+                    }
                 }
             }
-        }
     
-        function resetOpacityPlayer(){
+            function resetOpacityPlayer(){
+                for(var i = 0; i < elementos.length; i++){
+                    elementos[i].style.opacity = 0.3;
+                }
+            }
+    
+            function verificarVencedor(){
+                setTimeout(function() {
+                    if(playerOpt === inimigoOpt){
+                        alert("Empate!");
+                    } else if (
+                        (playerOpt === "pedra" && inimigoOpt === "tesoura") ||
+                        (playerOpt === "papel" && inimigoOpt === "pedra") ||
+                        (playerOpt === "tesoura" && inimigoOpt === "papel")
+                    ) {
+                        alert("Você ganhou!");
+                        pontuacaoJogador++; // Atualize a pontuação do jogador
+                    } else {
+                        alert("Você perdeu!");
+                        pontuacaoInimigo++; // Atualize a pontuação do inimigo
+                    }
+                    document.getElementById("pontuacaoJogador").textContent = pontuacaoJogador; // Atualize o conteúdo do elemento
+                    document.getElementById("pontuacaoInimigo").textContent = pontuacaoInimigo; // Atualize o conteúdo do elemento
+                }, 1000); // Atraso de 1 segundo
+            }
+    
             for(var i = 0; i < elementos.length; i++){
-                elementos[i].style.opacity = 0.3;
+                elementos[i].addEventListener('click', function(t){
+                    resetOpacityPlayer();
+                    t.target.style.opacity = 1;
+                    playerOpt = t.target.getAttribute('opt');
+    
+                    inimigoJogar();
+                    verificarVencedor();
+                });
             }
-        }
-    
-        function verificarVencedor(){
-            setTimeout(function() {
-                if(playerOpt == inimigoOpt){
-                    alert("Empate!");
-                } else if ((playerOpt == "pedra" && inimigoOpt == "tesoura") || 
-                           (playerOpt == "papel" && inimigoOpt == "pedra") || 
-                           (playerOpt == "tesoura" && inimigoOpt == "papel")) {
-                    alert("Você ganhou!");
-                } else {
-                    alert("Você perdeu!");
-                }
-            }, 1000); // Atraso de 1 segundo
-        }
-    
-        for(var i = 0; i < elementos.length; i++){
-            elementos[i].addEventListener('click',function(t){
-                resetOpacityPlayer();
-                t.target.style.opacity = 1;
-                playerOpt = t.target.getAttribute('opt');
-    
-                inimigoJogar();
-                verificarVencedor();
-            });
-        }
-    </script>
-    
-    
-    
-
+        </script>
     </body>
 </html>
