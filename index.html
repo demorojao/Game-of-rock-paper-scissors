@@ -1,0 +1,89 @@
+<html>
+    <body>
+        <style>
+            .player-options img,
+            .enemy-options img
+            {
+                max-width: 200px;
+                opacity: 0.3;
+                cursor: pointer;
+            }
+
+            .player-options,.enemy-options{
+                width:50%;
+            }
+
+            .align{
+                display: flex;
+            }
+        </style>
+        <h1 style="text-align: center;">Pedra, papel ou tesoura!</h1>
+        <hr>
+        <div class="align">
+            <div class="player-options">
+                <div><img opt="pedra" src="rock.png" /></div>
+                <div><img opt="papel" src="paper.png" /></div>
+                <div><img opt="tesoura" src="scisor.png" /></div>
+            </div>
+            <div class="enemy-options">
+                <div><img opt ="pedra" src="rock.png" /></div>
+                <div><img opt ="papel" src="paper.png" /></div>
+                <div><img opt ="tesoura" src="scisor.png" /></div>
+            </div>
+    </div>
+    <script>
+        var elementos = document.querySelectorAll('.player-options div > img');
+        var playerOpt = "";
+        var inimigoOpt = "";
+    
+        function inimigoJogar(){
+            let rand = Math.floor(Math.random()*3);
+            
+            const enemyOptions = document.querySelectorAll(".enemy-options div > img");
+    
+            for(var i = 0; i< enemyOptions.length; i++) {
+                enemyOptions[i].style.opacity = 0.3;
+                if(i == rand){
+                    enemyOptions[i].style.opacity = 1;
+                    inimigoOpt = enemyOptions[i].getAttribute('opt');
+                }
+            }
+        }
+    
+        function resetOpacityPlayer(){
+            for(var i = 0; i < elementos.length; i++){
+                elementos[i].style.opacity = 0.3;
+            }
+        }
+    
+        function verificarVencedor(){
+            setTimeout(function() {
+                if(playerOpt == inimigoOpt){
+                    alert("Empate!");
+                } else if ((playerOpt == "pedra" && inimigoOpt == "tesoura") || 
+                           (playerOpt == "papel" && inimigoOpt == "pedra") || 
+                           (playerOpt == "tesoura" && inimigoOpt == "papel")) {
+                    alert("Você ganhou!");
+                } else {
+                    alert("Você perdeu!");
+                }
+            }, 1000); // Atraso de 1 segundo
+        }
+    
+        for(var i = 0; i < elementos.length; i++){
+            elementos[i].addEventListener('click',function(t){
+                resetOpacityPlayer();
+                t.target.style.opacity = 1;
+                playerOpt = t.target.getAttribute('opt');
+    
+                inimigoJogar();
+                verificarVencedor();
+            });
+        }
+    </script>
+    
+    
+    
+
+    </body>
+</html>
